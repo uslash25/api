@@ -11,7 +11,7 @@ export class McpGroupRepository {
 
   async findChatsById(mcpGroupId: string) {
     return this.prisma.mcpGroupChat.findMany({
-      where: { mcpGroupId }, orderBy: { createdAt: 'asc' },
+      where: { mcpGroupId }, orderBy: { createdAt: 'asc' }, include: { mcpGroup: { include: { mcps: true } } },
     });
   }
 
