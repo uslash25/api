@@ -79,13 +79,22 @@ export class McpGroupService {
   }
 
   async createMcpGroupByNl(dto: CreateMcpGroupByNlRequestDto, userId: string) {
-    const response = {
-      id:      dto.id,
-      mcpIds:  [],
-      ownerId: userId,
-    };
-
-    const mcp = await this.mcpGroupRepository.createMcpGroup(response);
+    // Check if group already exists
+    const existingGroup = await this.mcpGroupRepository.findMcpGroupById(dto.id);
+    
+    let mcp;
+    if (existingGroup) {
+      // If group exists, just use it
+      mcp = existingGroup;
+    } else {
+      // Create new group
+      const response = {
+        id:      dto.id,
+        mcpIds:  [],
+        ownerId: userId,
+      };
+      mcp = await this.mcpGroupRepository.createMcpGroup(response);
+    }
 
     await this.sendUserMessage(mcp.id, dto.prompt);
 
