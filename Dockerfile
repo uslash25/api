@@ -45,6 +45,7 @@ COPY --from=build /app/dist dist
 COPY --from=build /app/package.json .
 COPY --from=build /app/prisma prisma
 COPY --from=deps /app/node_modules node_modules
+COPY --from=build /app/node_modules/.pnpm/@prisma+client@6.12.0_prisma@6.12.0_typescript@5.8.3__typescript@5.8.3/node_modules/.prisma node_modules/.pnpm/@prisma+client@6.12.0_prisma@6.12.0_typescript@5.8.3__typescript@5.8.3/node_modules/.prisma
 
 RUN mkdir -p /app/tmp && chmod 777 /app/tmp
 
