@@ -54,7 +54,7 @@ export class McpService {
 
     const httpResponse = await firstValueFrom(this.httpService.post('https://mcp.ruha.uno/api/ai/mcp', {
       id:           mcpId,
-      Chat_history: chatHistory,
+      chat_history: chatHistory,
       user_input:   message,
     }));
 
@@ -62,15 +62,13 @@ export class McpService {
       description: string;
     } = httpResponse.data;
 
-    const chat = await this.mcpRepository.sendMessage(mcpId, message, McpChatRole.USER);
+    await this.mcpRepository.sendMessage(mcpId, message, McpChatRole.USER);
+
     const assistantMessage = await this.mcpRepository.sendMessage(mcpId, response.description, McpChatRole.ASSISTANT);
 
     await this.mcpRepository.updateMcpDescription(mcpId, response.description);
 
-    return {
-      chat,
-      assistantMessage,
-    };
+    return assistantMessage;
   }
 
   async createMcp(dto: CreateMcpRequestDto, userId: string) {

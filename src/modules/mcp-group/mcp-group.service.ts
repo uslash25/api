@@ -33,19 +33,19 @@ export class McpGroupService {
     ];
 
     const mcpRequestList = allMcps.map(mcp => ({
-      Id:          mcp.id,
+      id:          mcp.id,
       description: mcp.description,
     }));
 
     const httpResponse = await firstValueFrom(this.httpService.post('https://mcp.ruha.uno/api/ai/mcp_group', {
-      Chat_history: chatHistory,
+      chat_history: chatHistory,
       user_input:   message,
       mcp_list:     mcpRequestList,
     }));
 
     const response: {
       mcp_list:       {
-        Id:          string;
+        id:          string;
         description: string;
       }[];
       description: string;
@@ -57,7 +57,7 @@ export class McpGroupService {
 
     await this.mcpGroupRepository.updateMcpGroup(mcpGroupId, {
       description: response.description,
-      mcpIds:      response.mcp_list.map(mcp => mcp.Id),
+      mcpIds:      response.mcp_list.map(mcp => mcp.id),
     });
 
     return assistantMessage;
