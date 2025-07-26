@@ -51,7 +51,8 @@ export class McpGroupService {
       description: string;
     } = httpResponse.data;
 
-    const chat = await this.mcpGroupRepository.sendMessage(mcpGroupId, message, McpChatRole.USER);
+    await this.mcpGroupRepository.sendMessage(mcpGroupId, message, McpChatRole.USER);
+
     const assistantMessage = await this.mcpGroupRepository.sendMessage(mcpGroupId, response.description, McpChatRole.ASSISTANT);
 
     await this.mcpGroupRepository.updateMcpGroup(mcpGroupId, {
@@ -59,10 +60,7 @@ export class McpGroupService {
       mcpIds:      response.mcp_list.map(mcp => mcp.Id),
     });
 
-    return {
-      chat,
-      assistantMessage,
-    };
+    return assistantMessage;
   }
 
   async createMcpGroupByChoice(dto: CreateMcpGroupByChoiceRequestDto, userId: string) {
@@ -79,20 +77,19 @@ export class McpGroupService {
   }
 
   async createMcpGroupByNl(dto: CreateMcpGroupByNlRequestDto, userId: string) {
-    // Check if group already exists
     const existingGroup = await this.mcpGroupRepository.findMcpGroupById(dto.id);
-    
+
     let mcp;
+
     if (existingGroup) {
-      // If group exists, just use it
       mcp = existingGroup;
     } else {
-      // Create new group
       const response = {
         id:      dto.id,
         mcpIds:  [],
         ownerId: userId,
       };
+
       mcp = await this.mcpGroupRepository.createMcpGroup(response);
     }
 

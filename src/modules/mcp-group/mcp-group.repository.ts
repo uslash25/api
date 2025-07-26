@@ -16,11 +16,14 @@ export class McpGroupRepository {
   }
 
   async sendMessage(mcpGroupId: string, message: string, role: McpChatRole) {
-    return this.prisma.mcpGroupChat.create({ data: {
-      mcpGroupId,
-      message,
-      role,
-    } });
+    return this.prisma.mcpGroupChat.create({
+      data: {
+        mcpGroupId,
+        message,
+        role,
+      },
+      include: { mcpGroup: { include: { mcps: true } } },
+    });
   }
 
   async updateMcpGroup(mcpGroupId: string, dto: UpdateMcpGroupDto) {
