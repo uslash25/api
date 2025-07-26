@@ -1,0 +1,34 @@
+model Mcp {
+  id String @id
+
+  description String?
+
+  ownerId String
+
+  owner User @relation(fields: [ownerId], references: [id])
+
+  chats McpChat[]
+
+  mcpGroups McpGroup[] @relation("McpGroupMcps")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model McpChat {
+  id String @id @default(uuid())
+
+  mcpId String
+
+  mcp Mcp @relation(fields: [mcpId], references: [id])
+
+  message String
+  role    McpChatRole
+
+  createdAt DateTime @default(now())
+}
+
+enum McpChatRole {
+  USER
+  ASSISTANT
+}

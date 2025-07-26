@@ -1,0 +1,16 @@
+-- CreateEnum
+CREATE TYPE "MCPChatRole" AS ENUM ('USER', 'ASSISTANT');
+
+-- CreateTable
+CREATE TABLE "MCPChat" (
+    "id" TEXT NOT NULL,
+    "mcpId" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "role" "MCPChatRole" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "MCPChat_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "MCPChat" ADD CONSTRAINT "MCPChat_mcpId_fkey" FOREIGN KEY ("mcpId") REFERENCES "MCP"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

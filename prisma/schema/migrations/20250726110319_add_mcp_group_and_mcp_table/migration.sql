@@ -1,0 +1,46 @@
+-- CreateTable
+CREATE TABLE "MCPGroup" (
+    "id" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "ownerId" TEXT NOT NULL,
+    "deployed" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deployedAt" TIMESTAMP(3),
+
+    CONSTRAINT "MCPGroup_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MCP" (
+    "id" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "ownerId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "MCP_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_MCPGroupMCPs" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_MCPGroupMCPs_AB_pkey" PRIMARY KEY ("A","B")
+);
+
+-- CreateIndex
+CREATE INDEX "_MCPGroupMCPs_B_index" ON "_MCPGroupMCPs"("B");
+
+-- AddForeignKey
+ALTER TABLE "MCPGroup" ADD CONSTRAINT "MCPGroup_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MCP" ADD CONSTRAINT "MCP_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MCPGroupMCPs" ADD CONSTRAINT "_MCPGroupMCPs_A_fkey" FOREIGN KEY ("A") REFERENCES "MCP"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MCPGroupMCPs" ADD CONSTRAINT "_MCPGroupMCPs_B_fkey" FOREIGN KEY ("B") REFERENCES "MCPGroup"("id") ON DELETE CASCADE ON UPDATE CASCADE;
