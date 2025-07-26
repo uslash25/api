@@ -38,6 +38,7 @@ async function bootstrap() {
       .setTitle('USlash API')
       .setDescription('USlash Backend API Documentation')
       .setVersion(packageJson.version)
+      .addServer('/', 'Local Development')
       .addBearerAuth({
         type:         'http',
         scheme:       'bearer',
@@ -56,9 +57,10 @@ async function bootstrap() {
       swaggerOptions:  {
         persistAuthorization:   true,
         displayRequestDuration: true,
-        docExpansion:           'none',
-        filter:                 true,
+        docExpansion:           'list',
+        filter:                 false,
         showRequestHeaders:     true,
+        tryItOutEnabled:        true,
       },
     });
   }
