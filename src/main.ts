@@ -51,8 +51,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('api/docs', app, document, {
-    jsonDocumentUrl: 'api/docs-json',
-    swaggerOptions:  { persistAuthorization: true },
+    jsonDocumentUrl: '/api/docs-json',
+    swaggerOptions:  {
+      persistAuthorization: true,
+      docExpansion:         'list',
+    },
   });
 
   await app.listen(8000, '0.0.0.0');
