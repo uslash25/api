@@ -34,7 +34,12 @@ export class McpGroupRepository {
   }
 
   async createMcpGroup(mcp: CreateMcpGroupDto) {
-    return this.prisma.mcpGroup.create({ data: mcp });
+    const { mcpIds, ...rest } = mcp;
+
+    return this.prisma.mcpGroup.create({ data: {
+      ...rest,
+      mcps: { connect: mcpIds.map(mcpId => ({ id: mcpId })) },
+    } });
   }
 
   async findMcpGroupById(mcpGroupId: string) {
