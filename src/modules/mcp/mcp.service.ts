@@ -29,6 +29,16 @@ export class McpService {
     return this.mcpRepository.findMcpById(mcpId);
   }
 
+  async getMcpCode(mcpId: string) {
+    const httpResponse = await firstValueFrom(this.httpService.get(`https://mcp.ruha.uno/api/code/${mcpId}`));
+
+    const response: {
+      data: string;
+    } = httpResponse.data;
+
+    return response;
+  }
+
   async sendUserMessage(mcpId: string, message: string) {
     const allChats = await this.mcpRepository.findChatsById(mcpId);
 

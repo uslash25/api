@@ -32,6 +32,13 @@ export class McpController {
     return this.mcpService.getMcpById(mcpId);
   }
 
+  @Get('/:mcpId/code')
+  @Authenticated()
+  @ApiOperation({ summary: 'Get MCP code' })
+  async getMcpCode(@Param('mcpId') mcpId: string) {
+    return this.mcpService.getMcpCode(mcpId);
+  }
+
   @Get('/:mcpId/chat')
   @Authenticated()
   @ApiOperation({ summary: 'Get MCP chats' })
