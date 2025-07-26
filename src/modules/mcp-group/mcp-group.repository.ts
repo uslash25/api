@@ -28,7 +28,7 @@ export class McpGroupRepository {
       where: { id: mcpGroupId },
       data:  {
         description: dto.description,
-        mcps:        { set: dto.mcpIds.map(mcpId => ({ id: mcpId })) },
+        mcps:        { set: dto.mcpIds.filter(Boolean).map(mcpId => ({ id: mcpId })) },
       },
     });
   }
