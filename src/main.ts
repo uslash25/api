@@ -38,7 +38,15 @@ async function bootstrap() {
       .setTitle('USlash API')
       .setDescription('USlash Backend API Documentation')
       .setVersion(packageJson.version)
-      .addBearerAuth()
+      .addBearerAuth({
+        type:         'http',
+        scheme:       'bearer',
+        bearerFormat: 'JWT',
+        name:         'JWT',
+        description:  'Enter JWT token',
+        in:           'header',
+      },
+      'JWT-auth')
       .build();
 
     const document = SwaggerModule.createDocument(app, config);

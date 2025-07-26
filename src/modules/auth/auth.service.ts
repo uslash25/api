@@ -2,7 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { DynamicDto } from '@/common/dto/dynamic.dto';
 import { LogService } from '@/common/modules/log';
-import { comparePassword } from '@/common/utils/bcrypt';
+import { comparePassword, hashPassword } from '@/common/utils/bcrypt';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginDto, LoginResponseDto } from './dto/login.dto';
 import { AuthRepository } from './repositories/auth.repository';
 
@@ -17,6 +18,14 @@ export class AuthService {
   constructor(private readonly jwtService: JwtService,
     private readonly authRepository: AuthRepository,
     private readonly logger: LogService) {
+  }
+
+  async register(dto: CreateUserDto) {
+    dto.password = await hashPassword(dto.password);
+
+    const user = await this.authRepository.createUser(dto);
+
+    return user;
   }
 
   async login(dto: LoginDto) {

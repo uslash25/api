@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { LogModule } from '@/common/modules/log';
@@ -12,11 +12,13 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [
+    ConfigModule,
     PassportModule,
     PrismaModule,
     RedisModule,
     LogModule,
     JwtModule.registerAsync({
+      imports:    [ConfigModule],
       useFactory: (configService: ConfigService) => ({ secret: configService.get<string>('JWT_SECRET') }),
       inject:     [ConfigService],
     }),

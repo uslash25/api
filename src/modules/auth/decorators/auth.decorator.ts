@@ -5,9 +5,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 export function Authenticated() {
-  return applyDecorators(UseGuards(AuthGuard('jwt')));
+  return applyDecorators(ApiBearerAuth('JWT-auth'),
+    UseGuards(AuthGuard('jwt')));
 }
 
 export const CurrentUser = createParamDecorator((data: unknown, ctx: ExecutionContext) => {

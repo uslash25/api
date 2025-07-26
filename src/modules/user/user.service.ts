@@ -1,23 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LogService } from '@/common/modules/log';
-import { hashPassword } from '@/common/utils/bcrypt';
 import { AuthService } from '../auth/auth.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserRepository } from './repositories/user.repository';
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository, private readonly authService: AuthService, private readonly logger: LogService) {
-  }
-
-  async create(dto: CreateUserDto) {
-    dto.password = await hashPassword(dto.password);
-
-    const user = await this.userRepository.createUser(dto);
-
-    this.logger.log('User', `Successfully created user (id: ${user.id})`);
-
-    return user;
   }
 
   async deleteUser(userId: string) {

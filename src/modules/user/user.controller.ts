@@ -1,16 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-} from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { Authenticated, CurrentUser } from '../auth/decorators/auth.decorator';
 import { AllowUserOnlyCurrentUser } from './decorators/allow-only-current-user.decorator';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 
 @Controller('/user')
@@ -18,14 +9,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {
   }
 
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() dto: CreateUserDto) {
-    return await this.userService.create(dto);
-  }
-
   @Get('/me')
-  @AllowUserOnlyCurrentUser()
+  @Authenticated()
   async me(@CurrentUser() user: User) {
     return user;
   }
@@ -39,7 +24,7 @@ export class UserController {
    */
 
   @Get('/:userId')
-  @Authenticated()
+  @AllowUserOnlyCurrentUser()
   async getUserById(@Param('userId') userId: string) {
     return await this.userService.getUserById(userId);
   }
