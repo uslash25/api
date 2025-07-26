@@ -38,21 +38,23 @@ async function bootstrap() {
       .setTitle('USlash API')
       .setDescription('USlash Backend API Documentation')
       .setVersion(packageJson.version)
-      .addBearerAuth()
+      .addBearerAuth({
+        type:         'http',
+        scheme:       'bearer',
+        bearerFormat: 'JWT',
+        name:         'JWT',
+        description:  'Enter JWT token',
+        in:           'header',
+      },
+      'JWT-auth')
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
 
-    SwaggerModule.setup('api/docs', app, document, {
-      jsonDocumentUrl: 'api/docs-json',
-      swaggerOptions:  {
-        persistAuthorization:   true,
-        displayRequestDuration: true,
-        docExpansion:           'none',
-        filter:                 true,
-        showRequestHeaders:     true,
-      },
-    });
+    SwaggerModule.setup('api/docs', app, document, { swaggerOptions: {
+      url:                  'api/docs-json',
+      persistAuthorization: true,
+    } });
   }
 
   await app.listen(8000, '0.0.0.0');
