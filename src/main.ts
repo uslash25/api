@@ -38,16 +38,7 @@ async function bootstrap() {
       .setTitle('USlash API')
       .setDescription('USlash Backend API Documentation')
       .setVersion(packageJson.version)
-      .addServer('/', 'Local Development')
-      .addBearerAuth({
-        type:         'http',
-        scheme:       'bearer',
-        bearerFormat: 'JWT',
-        name:         'JWT',
-        description:  'Enter JWT token',
-        in:           'header',
-      },
-      'JWT-auth')
+      .addBearerAuth()
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
@@ -57,10 +48,9 @@ async function bootstrap() {
       swaggerOptions:  {
         persistAuthorization:   true,
         displayRequestDuration: true,
-        docExpansion:           'list',
-        filter:                 false,
+        docExpansion:           'none',
+        filter:                 true,
         showRequestHeaders:     true,
-        tryItOutEnabled:        true,
       },
     });
   }
