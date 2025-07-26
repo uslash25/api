@@ -1,0 +1,65 @@
+import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import packageJson from '@/../package.json';
+import { AppModule } from './app/app.module';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const logger = new Logger('bootstrap');
+  const isProduction = configService.get('NODE_ENV') === 'production';
+
+  app.enableCors({
+    origin:  [process.env.CORS_ORIGIN || 'http://localhost:3000'],
+    methods: [
+      'GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS',
+    ],
+    credentials: true,
+  });
+
+  app.useGlobalPipes(new ValidationPipe({
+    transform:            true,
+    whitelist:            true,
+    forbidNonWhitelisted: true,
+    exceptionFactory:     errors => {
+      const messages = errors.map(err => `${err.property} - ${Object.values(err.constraints ?? {}).join(', ')}`);
+
+      return new BadRequestException(messages);
+    },
+  }));
+
+  app.useGlobalInterceptors(new TransformInterceptor);
+
+  if (!isProduction) {
+    const config = (new DocumentBuilder)
+      .setTitle('USlash API')
+      .setDescription('USlash Backend API Documentation')
+      .setVersion(packageJson.version)
+      .addBearerAuth()
+      .build();
+
+    const document = SwaggerModule.createDocument(app, config);
+
+    SwaggerModule.setup('api/docs', app, document, {
+      jsonDocumentUrl: 'api/docs-json',
+      swaggerOptions:  {
+        persistAuthorization:   true,
+        displayRequestDuration: true,
+        docExpansion:           'none',
+        filter:                 true,
+        showRequestHeaders:     true,
+      },
+    });
+  }
+
+  await app.listen(8000, '0.0.0.0');
+
+  logger.log(`Application version ${packageJson.version} is running on: ${await app.getUrl()}`);
+
+  logger.debug(`Environment: ${isProduction ? 'production' : 'development'}`);
+}
+
+bootstrap();
