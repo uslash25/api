@@ -11,7 +11,7 @@
     "start": "nest start",
     "dev": "rimraf dist && nest start --watch --silent",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "lint": "eslint . --fix",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
