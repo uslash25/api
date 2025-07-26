@@ -1,12 +1,15 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
+import { LogModule } from '@/common/modules/log';
 import { McpModule } from '../mcp/mcp.module';
 import { McpGroupController } from './mcp-group.controller';
 import { McpGroupRepository } from './mcp-group.repository';
 import { McpGroupService } from './mcp-group.service';
 
 @Module({
-  imports:     [HttpModule, McpModule],
+  imports: [
+    HttpModule, McpModule, LogModule,
+  ],
   controllers: [McpGroupController],
   providers:   [McpGroupService, McpGroupRepository],
   exports:     [],

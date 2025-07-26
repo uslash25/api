@@ -2,13 +2,15 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { McpChatRole } from '@prisma/client';
 import { firstValueFrom } from 'rxjs';
+import { LogService } from '@/common/modules/log';
 import { CreateMcpRequestDto } from './dto/create-mcp-request.dto';
 import { McpRepository } from './mcp.repository';
 
 @Injectable()
 export class McpService {
   constructor(private readonly mcpRepository: McpRepository,
-    private readonly httpService: HttpService) {
+    private readonly httpService: HttpService,
+    private readonly logger: LogService) {
   }
 
   async getChats(mcpId: string) {
@@ -52,11 +54,15 @@ export class McpService {
       },
     ];
 
+    this.logger.log(`MCP Chat history: ${JSON.stringify(chatHistory)}`);
+
     const httpResponse = await firstValueFrom(this.httpService.post('https://mcp.ruha.uno/api/ai/mcp', {
       id:           mcpId,
       chat_history: chatHistory,
       user_input:   message,
     }));
+
+    this.logger.log(`MCP Create HTTP response: ${JSON.stringify(httpResponse.data)}`);
 
     const response: {
       description: string;

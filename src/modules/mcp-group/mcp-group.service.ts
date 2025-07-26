@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { McpChatRole } from '@prisma/client';
 import { firstValueFrom } from 'rxjs';
+import { LogService } from '@/common/modules/log';
 import { McpService } from '../mcp/mcp.service';
 import { CreateMcpGroupByChoiceRequestDto } from './dto/create-mcp-group-by-choice-request.dto';
 import { CreateMcpGroupByNlRequestDto } from './dto/create-mcp-group-by-nl-request.dto';
@@ -11,7 +12,8 @@ import { McpGroupRepository } from './mcp-group.repository';
 export class McpGroupService {
   constructor(private readonly mcpGroupRepository: McpGroupRepository,
     private readonly httpService: HttpService,
-    private readonly mcpService: McpService) {
+    private readonly mcpService: McpService,
+    private readonly logger: LogService) {
   }
 
   async getChats(mcpId: string) {
@@ -32,16 +34,22 @@ export class McpGroupService {
       },
     ];
 
+    this.logger.log(`MCP Group Chat history: ${JSON.stringify(chatHistory)}`);
+
     const mcpRequestList = allMcps.map(mcp => ({
       id:          mcp.id,
       description: mcp.description,
     }));
+
+    this.logger.log(`MCP Group Request list: ${JSON.stringify(mcpRequestList)}`);
 
     const httpResponse = await firstValueFrom(this.httpService.post('https://mcp.ruha.uno/api/ai/mcp_group', {
       chat_history: chatHistory,
       user_input:   message,
       mcp_list:     mcpRequestList,
     }));
+
+    this.logger.log(`MCP Group HTTP response: ${JSON.stringify(httpResponse.data)}`);
 
     const response: {
       mcp_list:       {
