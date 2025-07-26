@@ -114,7 +114,7 @@ export class McpGroupService {
     }
 
     const httpResponse = await firstValueFrom(this.httpService.post('https://mcp.ruha.uno/api/mcp_group/create_mcp_group', {
-      id: mcpGroupId, mcp_list: mcpGroup.mcps.map(mcp => mcp.id),
+      id: mcpGroupId, mcp_list: mcpGroup.mcps,
     }));
 
     const response: {
