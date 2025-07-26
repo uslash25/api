@@ -121,7 +121,7 @@ export class McpGroupService {
       deploy_url: string;
     } = httpResponse.data;
 
-    await this.mcpGroupRepository.setMcpGroupDeployed(mcpGroupId);
+    await this.mcpGroupRepository.setMcpGroupDeployed(mcpGroupId, response.deploy_url);
 
     return { deployUrl: response.deploy_url };
   }

@@ -54,10 +54,14 @@ export class McpGroupRepository {
     });
   }
 
-  async setMcpGroupDeployed(mcpGroupId: string) {
+  async setMcpGroupDeployed(mcpGroupId: string, deploymentUrl: string) {
     return this.prisma.mcpGroup.update({
       where: { id: mcpGroupId },
-      data:  { deployed: true },
+      data:  {
+        deployed:   true,
+        deploymentUrl,
+        deployedAt: new Date,
+      },
     });
   }
 }

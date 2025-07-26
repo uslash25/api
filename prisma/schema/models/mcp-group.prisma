@@ -11,8 +11,9 @@ model McpGroup {
 
   chats McpGroupChat[]
 
-  deployed   Boolean   @default(false)
-  deployedAt DateTime?
+  deployed      Boolean   @default(false)
+  deploymentUrl String?
+  deployedAt    DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
