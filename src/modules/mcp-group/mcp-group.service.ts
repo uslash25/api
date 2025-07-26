@@ -26,10 +26,10 @@ export class McpGroupService {
 
     const chatHistory = [
       ...allChats.map(chat => ({
-        role:    chat.role,
+        role:    chat.role === McpChatRole.USER ? 'user' : 'assistant',
         content: chat.message,
       })), {
-        role:    McpChatRole.USER,
+        role:    'user',
         content: message,
       },
     ];
