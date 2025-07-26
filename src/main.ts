@@ -33,28 +33,27 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new TransformInterceptor);
 
-  if (!isProduction) {
-    const config = (new DocumentBuilder)
-      .setTitle('USlash API')
-      .setDescription('USlash Backend API Documentation')
-      .setVersion(packageJson.version)
-      .addBearerAuth({
-        type:         'http',
-        scheme:       'bearer',
-        bearerFormat: 'JWT',
-        name:         'JWT',
-        description:  'Enter JWT token',
-        in:           'header',
-      },
-      'JWT-auth')
-      .build();
+  const config = (new DocumentBuilder)
+    .setTitle('USlash API')
+    .setDescription('USlash Backend API Documentation')
+    .setVersion(packageJson.version)
+    .addBearerAuth({
+      type:         'http',
+      scheme:       'bearer',
+      bearerFormat: 'JWT',
+      name:         'JWT',
+      description:  'Enter JWT token',
+      in:           'header',
+    },
+    'JWT-auth')
+    .build();
 
-    const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config);
 
-    SwaggerModule.setup('api/docs', app, document, {
-      jsonDocumentUrl: 'api/docs-json', swaggerOptions: { persistAuthorization: true },
-    });
-  }
+  SwaggerModule.setup('api/docs', app, document, {
+    jsonDocumentUrl: 'api/docs-json',
+    swaggerOptions:  { persistAuthorization: true },
+  });
 
   await app.listen(8000, '0.0.0.0');
 
