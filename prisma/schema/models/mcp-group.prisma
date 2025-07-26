@@ -1,7 +1,7 @@
 model McpGroup {
   id String @id
 
-  description String
+  description String?
 
   ownerId String
 
@@ -9,9 +9,24 @@ model McpGroup {
 
   mcps Mcp[] @relation("McpGroupMcps")
 
+  chats McpGroupChat[]
+
   deployed   Boolean   @default(false)
   deployedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model McpGroupChat {
+  id String @id @default(uuid())
+
+  mcpGroupId String
+
+  mcpGroup McpGroup @relation(fields: [mcpGroupId], references: [id])
+
+  message String
+  role    McpChatRole
+
+  createdAt DateTime @default(now())
 }

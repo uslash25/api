@@ -6,6 +6,8 @@ import packageJson from '@/../package.json';
 import { AppModule } from './app/app.module';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
+import { McpModule } from './modules/mcp/mcp.module';
+import { McpGroupModule } from './modules/mcp-group/mcp-group.module';
 import { UserModule } from './modules/user/user.module';
 
 async function bootstrap() {
@@ -50,7 +52,9 @@ async function bootstrap() {
     'JWT-auth')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config, { include: [AuthModule, UserModule] });
+  const document = SwaggerModule.createDocument(app, config, { include: [
+    AuthModule, UserModule, McpModule, McpGroupModule,
+  ] });
 
   SwaggerModule.setup('api/docs', app, document, {
     jsonDocumentUrl: 'api/docs-json',

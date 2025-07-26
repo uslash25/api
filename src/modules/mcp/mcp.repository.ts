@@ -32,4 +32,12 @@ export class McpRepository {
   async createMcp(mcp: CreateMcpDto) {
     return this.prisma.mcp.create({ data: mcp });
   }
+
+  async findAllMcps() {
+    return this.prisma.mcp.findMany({ include: { owner: { omit: { password: true } } } });
+  }
+
+  async findAllMcpGroups() {
+    return this.prisma.mcpGroup.findMany({ include: { owner: { omit: { password: true } } } });
+  }
 }

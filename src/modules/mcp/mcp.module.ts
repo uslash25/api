@@ -1,13 +1,14 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { McpController } from './mcp.controller';
 import { McpRepository } from './mcp.repository';
 import { McpService } from './mcp.service';
 
 @Module({
-  imports:     [],
+  imports:     [HttpModule],
   controllers: [McpController],
   providers:   [McpService, McpRepository],
-  exports:     [],
+  exports:     [McpService],
 })
-export class MCPModule {
+export class McpModule {
 }
