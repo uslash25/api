@@ -40,4 +40,10 @@ export class McpRepository {
   async findAllMcpGroups() {
     return this.prisma.mcpGroup.findMany({ include: { owner: { omit: { password: true } } } });
   }
+
+  async findMcpById(mcpId: string) {
+    return this.prisma.mcp.findUnique({
+      where: { id: mcpId }, include: { owner: { omit: { password: true } } },
+    });
+  }
 }

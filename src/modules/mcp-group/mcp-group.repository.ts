@@ -36,4 +36,20 @@ export class McpGroupRepository {
   async createMcpGroup(mcp: CreateMcpGroupDto) {
     return this.prisma.mcpGroup.create({ data: mcp });
   }
+
+  async findMcpGroupById(mcpGroupId: string) {
+    return this.prisma.mcpGroup.findUnique({
+      where:   { id: mcpGroupId },
+      include: {
+        mcps: true, owner: { omit: { password: true } },
+      },
+    });
+  }
+
+  async setMcpGroupDeployed(mcpGroupId: string) {
+    return this.prisma.mcpGroup.update({
+      where: { id: mcpGroupId },
+      data:  { deployed: true },
+    });
+  }
 }

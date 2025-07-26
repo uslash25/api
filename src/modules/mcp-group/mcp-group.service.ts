@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { McpChatRole } from '@prisma/client';
 import { firstValueFrom } from 'rxjs';
 import { McpService } from '../mcp/mcp.service';
@@ -90,5 +90,29 @@ export class McpGroupService {
     await this.sendUserMessage(mcp.id, dto.prompt);
 
     return mcp;
+  }
+
+  async deployMcpGroup(mcpGroupId: string) {
+    const mcpGroup = await this.mcpGroupRepository.findMcpGroupById(mcpGroupId);
+
+    if (!mcpGroup) {
+      throw new BadRequestException('MCP Group Not Found');
+    }
+
+    const httpResponse = await firstValueFrom(this.httpService.post('https://mcp.ruha.uno/api/mcp_group/create_mcp_group', {
+      id: mcpGroupId, mcp_list: mcpGroup.mcps.map(mcp => mcp.id),
+    }));
+
+    const response: {
+      deploy_url: string;
+    } = httpResponse.data;
+
+    await this.mcpGroupRepository.setMcpGroupDeployed(mcpGroupId);
+
+    return { deployUrl: response.deploy_url };
+  }
+
+  async getMcpGroupById(mcpGroupId: string) {
+    return this.mcpGroupRepository.findMcpGroupById(mcpGroupId);
   }
 }

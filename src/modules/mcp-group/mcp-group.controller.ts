@@ -19,11 +19,25 @@ export class McpGroupController {
   constructor(private readonly mcpGroupService: McpGroupService) {
   }
 
+  @Get('/:mcpGroupId')
+  @Authenticated()
+  @ApiOperation({ summary: 'Get MCP Group by ID' })
+  async getMcpGroupById(@Param('mcpGroupId') mcpGroupId: string) {
+    return this.mcpGroupService.getMcpGroupById(mcpGroupId);
+  }
+
   @Get('/:mcpGroupId/chat')
   @Authenticated()
   @ApiOperation({ summary: 'Get MCP Group chats' })
   async getMcpChats(@Param('mcpGroupId') mcpGroupId: string) {
     return this.mcpGroupService.getChats(mcpGroupId);
+  }
+
+  @Post('/:mcpGroupId/deploy')
+  @Authenticated()
+  @ApiOperation({ summary: 'Deploy MCP Group' })
+  async deployMcpGroup(@Param('mcpGroupId') mcpGroupId: string) {
+    return this.mcpGroupService.deployMcpGroup(mcpGroupId);
   }
 
   @Post('/choice')

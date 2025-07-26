@@ -25,6 +25,10 @@ export class McpService {
     };
   }
 
+  async getMcpById(mcpId: string) {
+    return this.mcpRepository.findMcpById(mcpId);
+  }
+
   async sendUserMessage(mcpId: string, message: string) {
     const allChats = await this.mcpRepository.findChatsById(mcpId);
 

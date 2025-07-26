@@ -25,6 +25,13 @@ export class McpController {
     return this.mcpService.getAllMcps();
   }
 
+  @Get('/:mcpId')
+  @Authenticated()
+  @ApiOperation({ summary: 'Get MCP by ID' })
+  async getMcpById(@Param('mcpId') mcpId: string) {
+    return this.mcpService.getMcpById(mcpId);
+  }
+
   @Get('/:mcpId/chat')
   @Authenticated()
   @ApiOperation({ summary: 'Get MCP chats' })
