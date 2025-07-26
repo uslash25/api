@@ -44,8 +44,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         message: Array<string> | string;
       };
 
-      console.log(exceptionResponse.message);
-
       const messages = typeof exceptionResponse.message === 'string'
         ? [exceptionResponse.message]
         : exceptionResponse.message;
